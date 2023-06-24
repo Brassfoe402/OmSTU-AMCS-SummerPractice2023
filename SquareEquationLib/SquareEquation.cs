@@ -6,22 +6,22 @@
         {
             if (double.IsNaN(a) || double.IsInfinity(a))
             {
-                throw new ArgumentException("A coefficient is not a valid number.");
+                throw new ArgumentException();
             }
 
             if (double.IsNaN(b) || double.IsInfinity(b))
             {
-                throw new ArgumentException("B coefficient is not a valid number.");
+                throw new ArgumentException();
             }
 
             if (double.IsNaN(c) || double.IsInfinity(c))
             {
-                throw new ArgumentException("C coefficient is not a valid number.");
+                throw new ArgumentException();
             }
 
             if (a == 0)
             {
-                throw new ArgumentException("A coefficient cannot be zero.");
+                throw new ArgumentException();
             }
 
             double discriminant = b * b - 4 * a * c;
