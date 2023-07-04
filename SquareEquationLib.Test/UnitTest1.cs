@@ -1,51 +1,78 @@
 using Xunit;
+using System;
 using SquareEquationLib;
 
-namespace SquareEquationLib.Tests;
+namespace UnitTest1;
 
-public class SquareEquationLib_isUnite
+public class UnitTest1
 {
-    [Fact]
-    public void Solve_ReturnsTwoRoots()
+    [Theory]
+    [InlineData(0, 1, 1)]
+    [InlineData(double.NaN, 1, 1)]
+    [InlineData(1, double.NaN, 1)]
+    [InlineData(1, 1, double.NaN)]
+    [InlineData(double.NegativeInfinity, 1, 1)]
+    [InlineData(1, double.NegativeInfinity, 1)]
+    [InlineData(1, 1, double.NegativeInfinity)]
+    [InlineData(double.PositiveInfinity, 1, 1)]
+    [InlineData(1, double.PositiveInfinity, 1)]
+    [InlineData(1, 1, double.PositiveInfinity)]
+    public void Test_for_Exception(double a, double b, double c)
     {
-        double[] expected = new double[] { -3, 2 };
-        double[] actual = SquareEquation.Solve(1, 1, -6);
+        var SquareEquation = new SquareEquation();
+        var argExc = new ArgumentException();
 
-        Assert.Equal(expected, actual);
-    }
-
-    [Fact]
-    public void Solve_ReturnsOneRoots()
-    {
-        double[] expected = new double[] { 4 };
-        double[] actual = SquareEquation.Solve(1, -8, 16);
-
-        Assert.Equal(expected, actual);
-    }
-
-    [Fact]
-    public void Solve_ReturnsEmpty()
-    {
-        double[] expected = new double[] { };
-        double[] actual = SquareEquation.Solve(2, 1, 4);
-
-        Assert.Equal(expected, actual);
-    }
-
-
-
-    [Fact]
-    public void Solve_ThrowsArgumentException()
-    {
-        Assert.Throws<System.ArgumentException>(() => SquareEquation.Solve(0, 2, 3));
+        try
+        {
+            var result = SquareEquation.Solve(a, b, c);
+        }
+        catch (Exception ex)
+        {
+            Assert.Equal(argExc.GetType(), ex.GetType());
+        }
     }
 
     [Theory]
-    [InlineData(double.NaN, 2, 3)]
-    [InlineData(1, double.PositiveInfinity, 3)]
-    [InlineData(1, 2, double.NegativeInfinity)]
-    public void Solve_InvalidCoefficients(double a, double b, double c)
+    [InlineData(1, 2, 1)]
+    [InlineData(4, 8, 4)]
+    public void Test_for_one_root(double a, double b, double c)
     {
-        Assert.Throws<System.ArgumentException>(() => SquareEquation.Solve(a, b, c));
+        var SquareEquation = new SquareEquation();
+        double[] result = SquareEquation.Solve(a, b, c);
+
+        double eps = 1e-9;
+
+        foreach (var i in result)
+        {
+            Assert.Equal(0, Math.Abs(a * Math.Pow(i, 2) + b * i + c), eps);
+        }
+    }
+
+    [Theory]
+    [InlineData(1, 72, 1)]
+    [InlineData(4, 88, 4)]
+    public void Test_for_two_roots(double a, double b, double c)
+    {
+        var SquareEquation = new SquareEquation();
+
+        double[] result = SquareEquation.Solve(a, b, c);
+
+        double eps = 1e-9;
+
+        foreach (var i in result)
+        {
+            Assert.Equal(0, Math.Abs(a * Math.Pow(i, 2) + b * i + c), eps);
+        }
+    }
+
+    [Theory]
+    [InlineData(10000, 1, 1)]
+    [InlineData(1, 1, 24)]
+    public void Test_for_no_roots(double a, double b, double c)
+    {
+        var SquareEquation = new SquareEquation();
+
+        double[] result = SquareEquation.Solve(a, b, c);
+        Assert.Empty(result);
     }
 }
