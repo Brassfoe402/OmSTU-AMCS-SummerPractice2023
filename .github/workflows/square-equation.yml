@@ -13,7 +13,7 @@ jobs:
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
-        with:
+        with: 
           dotnet-version: 7.0.x
 
       - name: Restore dependencies
@@ -22,11 +22,8 @@ jobs:
       - name: Build
         run: dotnet build SquareEquationLib --no-restore /p:ContinuousIntegrationBuild=true
 
-      - name: Test
-        run: ./SquareEquationTest ./SquareEquationLib/bin/Debug/net7.0/SquareEquationLib.dll
+      - name: UnitTest
+        run: dotnet test
 
-      - name: XUnit MSBuild test
-        run: cd XUnit.Coverlet.MSBuild && dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-
-      - name: XUnit Collector test
-        run: cd XUnit.Coverlet.Collector && dotnet test --collect:"XPlat Code Coverage"
+      - name: Coverage
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
