@@ -82,6 +82,5 @@ namespace spacebattletests
             isKnowPosition, speed, start));
         }
 
-
     }
 }
